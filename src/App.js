@@ -1,18 +1,13 @@
 import React, { Component } from 'react'
 import './App.css';
-import Book from './Book/Book.js'
-import * as BooksAPI from './Book/BooksAPI.js'
-import { Container, Button, darkColors, lightColors } from 'react-floating-action-button'
-import Shelf from './Shelf/Shelf.js'
+import * as BooksAPI from './BooksAPI'
+import Main from './Main.js'
+import { Route } from 'react-router-dom'
+import Search from './Search';
 
 class App extends Component {
-
     state = {
-        books: [],
-        currentlyReadingbooks: [],
-        wantToReadBooks: [],
-        readBooks: [],
-        bookCategory: 0
+        books: []
     };
 
     componentDidMount() {
@@ -21,20 +16,26 @@ class App extends Component {
                 this.setState({
                     books: result
                 })
-                console.log(result)
-            }
-            )
+            })
     };
 
-    onCategorySelectionChanged = (event, books) => {
-        const status = event.target.value
-        BooksAPI.update(books, status)
+    onCategorySelectionChanged = (event, book) => {
+        const newShelf = event.target.value;
+        let newBookList = [];
+
+        BooksAPI.update(book, newShelf)
             .then((result) => {
-                console.log(result)
+                if (result != null) {
+                    newBookList = this.state.books.map((oldBook) => {
+                        if (oldBook.id === book.id) {
+                            book.shelf = newShelf
+                            return book
+                        }
+                        return oldBook;
+                    })
+                }
                 this.setState({
-                    currentlyReadingbooks: result.currentlyReading,
-                    wantToReadBooks: result.wantToRead,
-                    readBooks: result.read
+                    books: newBookList
                 })
             }).catch((error) => console.log(error))
     }
@@ -43,46 +44,15 @@ class App extends Component {
         console.log(this.state.books[0])
         return (
             <div className="App">
-                <div className="book-list">
-                    <div className="list-books-title">
-                        <h1>MyReads</h1>
-                    </div>
-                    <div className="list-books-content">
-                        <div>
-                            <Shelf shelfName = 'Currently Reading' books = {this.state.books} />
-                        </div>
-                        <div>
-                            <div className="bookshelf">
-                                <h2 className="bookshelf-title">Want to Read</h2>
-                                <div className="bookshelf-books">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="bookshelf">
-                                <h2 className="bookshelf-title">Read</h2>
-                                <div className="bookshelf-books">
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <Container>
-                            <Button
-                                tooltip="Add Book"
-                                styles={{ backgroundColor: darkColors.lighterRed, color: lightColors.white }}
-                                icon="fas fa-plus"
-                                onClick={() => alert('FAB Rocks!')}
-                            />
-                        </Container>
-                    </div>
-                </div>
+            <Route exact path="/" render = {() => (
+                <Main books = {this.state.books} onCategorySelectionChanged = {this.onCategorySelectionChanged} />
+            )}  />
+            <Route path="/search" render = {() => (
+                <Search onCategorySelectionChanged = {this.onCategorySelectionChanged} shelfBooks = {this.state.books} />
+            )} />
             </div>
         );
     }
-
 }
 
 export default App;
