@@ -1,16 +1,27 @@
 # MyReads Project
 
+<<<<<<< HEAD
 This is the first project for Udacity React JS Nanodegree program. 
 
 It can make you have a book list with three categories ; Currently Reading, Want To Read and Read.
+=======
+It is an application for you to track books that
 
-## TL;DR
+* You've read
+* You want to read
+* You are reading at this time
+>>>>>>> develop
 
-To get started developing right away:
+The application has three shelves for above categories. New books can be added or they can be moved between these shelves.
+
+## Requirements
+
+To start this project, you will need Node.js on your development environement. Then, you can follow these steps:
 
 * install all project dependencies with `npm install`
 * start the development server with `npm start`
 
+<<<<<<< HEAD
 ## Project Structure
 ```bash
 ├── CONTRIBUTING.md
@@ -42,5 +53,6 @@ Remember that good React design practice is to create new JS files for each comp
 ## Contributing
 
 This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+=======
+>>>>>>> develop
 
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
